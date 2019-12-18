@@ -1,0 +1,6 @@
+﻿  LC3-VM.cpp
+  Registers.cpp
+C:\Users\AlfredoSanchez\source\repos\LC3-VM\LC3-VM\Error.h(10): warning C4091: 'static ': ignored on left of 'Error::CODES' when no variable is declared
+  Generating Code...
+C:\Users\AlfredoSanchez\source\repos\LC3-VM\LC3-VM\Error.h(10): warning C4091: 'static ': ignored on left of 'Error::CODES' when no variable is declared
+  LC3-VM.vcxproj -> C:\Users\AlfredoSanchez\source\repos\LC3-VM\Debug\LC3-VM.exe
