@@ -16,7 +16,7 @@ public:
 class RegistersController
 {
 public:
-	enum Register : unsigned int
+	enum class Register : unsigned int
 	{
 		R_0,
 		R_1,
@@ -36,5 +36,5 @@ public:
 
 private:
 	RegException regException;
-	uint16_t registers[REGISTERS_TOTAL];
+	uint16_t registers[10U];
 };
