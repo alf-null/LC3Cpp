@@ -4,8 +4,8 @@
 #include <iostream>
 
 #include "Memory.h"
+#include "Registers.h"
 #include "ISA.h"
-#include "Registers.h"	
 
 constexpr uint16_t PC_START = 0x3000;
 

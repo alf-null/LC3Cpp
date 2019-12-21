@@ -24,9 +24,11 @@ namespace ISA
 		OP_OPS_NUMBER
 	};
 
-	enum {
+	enum	 {
 		FL_POS = 1 << 0, /* Positive flag */
 		FL_ZRO = 1 << 1, /* Zero flag */
 		FL_NEG = 1 << 2 /* Negative flag */
 	};
+
+	uint16_t signExtend(uint16_t number, unsigned int bitCount);
 };
