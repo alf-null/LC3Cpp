@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+typedef unsigned short	uint16_t;
 
 namespace ISA
 {

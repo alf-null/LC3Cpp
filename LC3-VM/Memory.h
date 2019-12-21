@@ -2,15 +2,16 @@
 
 #include <memory>
 #include <cmath>
-#include <cstdint>
 #include <exception>
 #include "Error.h"
+
+typedef unsigned short	uint16_t;
 
 class MemException: public std::exception
 {
 public:
-	const Error::CODES OUTSIDE_OF_MEM_SPACE() const throw() {
-		return Error::CODES::OUTSIDE_OF_MEM_SPACE;
+	virtual const char* what() const throw() {
+		return "Outside of memory space";
 	}
 };
 

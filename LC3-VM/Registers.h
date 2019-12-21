@@ -1,14 +1,16 @@
 #pragma once
 
-#include <cstdint>
 #include <exception>
+#include "ISA.h"
 #include "Error.h"
+
+typedef unsigned short  suint16_t;
 
 class RegException: public std::exception
 {
 public:
-	const Error::CODES INVALID_REGISTER() const throw() {
-		return Error::CODES::INVALID_REG;
+	virtual const char* what() const throw() {
+		return "Invalid register access";
 	}
 };
 
@@ -33,6 +35,7 @@ public:
 
 	const uint16_t readRegister(Register location) const;
 	void writeRegister(Register location, uint16_t value);
+	void updateFlags(Register location);
 
 private:
 	RegException regException;

@@ -21,59 +21,76 @@ int main()
 	bool running = true;
 	while (running)
 	{
-		uint16_t instr = Memory.readMemory(Registers.readRegister(RegistersController::Register::R_PC));
-		Registers.writeRegister(RegistersController::Register::R_PC, 
-								Registers.readRegister(RegistersController::Register::R_PC)+1 );
+		try {
+			uint16_t instr = Memory.readMemory(Registers.readRegister(RegistersController::Register::R_PC));
+			Registers.writeRegister(RegistersController::Register::R_PC,
+				Registers.readRegister(RegistersController::Register::R_PC) + 1);
 
-		uint16_t op = instr >> 12;
-		switch (op)
-		{
-		case ISA::OP_BR:
+			uint16_t op = instr >> 12;
+			switch (op)
+			{
+			case ISA::OP_BR:
+				break;
+			case ISA::OP_ADD: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 526 
+				// DR
+				auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
+				// SR1
+				auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
+				// Has inmediate mode?
+				auto immFlag = (instr >> 5) & 0x1;
+				if (immFlag) {
+					auto imm5 = ISA::signExtend(instr & 0x1F, 5);
+					Registers.writeRegister(r0, Registers.readRegister(r1) + imm5);
+				}
+				else {
+					auto r2 = static_cast<RegistersController::Register>(instr & 0x7);
+					Registers.writeRegister(r0, Registers.readRegister(r1) + Registers.readRegister(r2));
+				}
+
+				Registers.updateFlags(r0);
+				break;
+			}
+			case ISA::OP_LD:
+				break;
+			case ISA::OP_ST:
+				break;
+			case ISA::OP_JSR:
+				break;
+			case ISA::OP_AND:
+				break;
+			case ISA::OP_LDR:
+				break;
+			case ISA::OP_STR:
+				break;
+			case ISA::OP_RTI:
+				break;
+			case ISA::OP_NOT:
+				break;
+			case ISA::OP_LDI:
+				break;
+			case ISA::OP_STI:
+				break;
+			case ISA::OP_JMP:
+				break;
+			case ISA::OP_RES:
+				break;
+			case ISA::OP_LEA:
+				break;
+			case ISA::OP_TRAP:
+				break;
+			default:
+				break;
+			}
+		}
+		catch (MemException& e) {
+			std::cout << e.what() << std::endl;
 			break;
-		case ISA::OP_ADD:
-			break;
-		case ISA::OP_LD:
-			break;
-		case ISA::OP_ST:
-			break;
-		case ISA::OP_JSR:
-			break;
-		case ISA::OP_AND:
-			break;
-		case ISA::OP_LDR:
-			break;
-		case ISA::OP_STR:
-			break;
-		case ISA::OP_RTI:
-			break;
-		case ISA::OP_NOT:
-			break;
-		case ISA::OP_LDI:
-			break;
-		case ISA::OP_STI:
-			break;
-		case ISA::OP_JMP:
-			break;
-		case ISA::OP_RES:
-			break;
-		case ISA::OP_LEA:
-			break;
-		case ISA::OP_TRAP:
-			break;
-		default:
+		}
+		catch (RegException & e) {
+			std::cout << e.what() << std::endl;
 			break;
 		}
 	}
 
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
