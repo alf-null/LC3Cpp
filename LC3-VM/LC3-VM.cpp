@@ -7,9 +7,64 @@
 #include "ISA.h"
 #include "Registers.h"	
 
+constexpr uint16_t PC_START = 0x3000;
+
 int main()
 {
-    std::cout << "Hello World!\n";
+	MemoryController Memory;
+	RegistersController Registers;
+
+	// R_PC Initialization
+	Registers.writeRegister(RegistersController::Register::R_PC, PC_START);
+	
+	// Instruction processing
+	bool running = true;
+	while (running)
+	{
+		uint16_t instr = Memory.readMemory(Registers.readRegister(RegistersController::Register::R_PC));
+		Registers.writeRegister(RegistersController::Register::R_PC, 
+								Registers.readRegister(RegistersController::Register::R_PC)+1 );
+
+		uint16_t op = instr >> 12;
+		switch (op)
+		{
+		case ISA::OP_BR:
+			break;
+		case ISA::OP_ADD:
+			break;
+		case ISA::OP_LD:
+			break;
+		case ISA::OP_ST:
+			break;
+		case ISA::OP_JSR:
+			break;
+		case ISA::OP_AND:
+			break;
+		case ISA::OP_LDR:
+			break;
+		case ISA::OP_STR:
+			break;
+		case ISA::OP_RTI:
+			break;
+		case ISA::OP_NOT:
+			break;
+		case ISA::OP_LDI:
+			break;
+		case ISA::OP_STI:
+			break;
+		case ISA::OP_JMP:
+			break;
+		case ISA::OP_RES:
+			break;
+		case ISA::OP_LEA:
+			break;
+		case ISA::OP_TRAP:
+			break;
+		default:
+			break;
+		}
+	}
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
