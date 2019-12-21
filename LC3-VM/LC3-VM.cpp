@@ -63,17 +63,32 @@ int main()
 				break;
 			case ISA::OP_STR:
 				break;
-			case ISA::OP_RTI:
+			case ISA::OP_RTI: // Unnused (for now)
 				break;
 			case ISA::OP_NOT:
 				break;
-			case ISA::OP_LDI:
+			case ISA::OP_LDI: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 532 
+				// DR
+				auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
+				// PCoffset9
+				uint16_t pcOffset = ISA::signExtend(instr & 0x1FF, 9);
+
+				Registers.writeRegister(r0, 
+					Memory.readMemory( 
+						Memory.readMemory( Registers.readRegister(RegistersController::Register::R_PC) + pcOffset ) 
+					) 
+				);
+
+				Registers.updateFlags(r0);
 				break;
+			}
+			
 			case ISA::OP_STI:
 				break;
 			case ISA::OP_JMP:
 				break;
-			case ISA::OP_RES:
+			case ISA::OP_RES: // Unnused (for now)
 				break;
 			case ISA::OP_LEA:
 				break;
@@ -92,5 +107,4 @@ int main()
 			break;
 		}
 	}
-
 }

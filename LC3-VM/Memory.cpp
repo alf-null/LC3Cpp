@@ -1,6 +1,6 @@
 #include "Memory.h"
 
-const uint16_t MemoryController::readMemory(const unsigned int location) const
+const uint16_t MemoryController::readMemory(const uint16_t location) const
 {
 	if (location > MEM_MAX_SIZE -1) {
 		throw memExceptions;
@@ -8,7 +8,7 @@ const uint16_t MemoryController::readMemory(const unsigned int location) const
 	return this->memory[location];
 }
 
-void MemoryController::writeMemory(const unsigned int location, uint16_t value)
+void MemoryController::writeMemory(const uint16_t location, uint16_t value)
 {
 	if (location > MEM_MAX_SIZE - 1) {
 		throw memExceptions;

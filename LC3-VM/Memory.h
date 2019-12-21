@@ -33,7 +33,7 @@ public:
 	{
 		delete[] memory;
 	}
-	const uint16_t readMemory(const unsigned int location) const;
-	void writeMemory(const unsigned	int location, uint16_t value);
+	const uint16_t readMemory(const uint16_t location) const;
+	void writeMemory(const uint16_t location, uint16_t value);
 };
 
