@@ -98,13 +98,22 @@ int main()
 				break;
 			}
 		}
-		catch (MemException& e) {
-			std::cout << e.what() << std::endl;
-			break;
-		}
-		catch (RegException & e) {
-			std::cout << e.what() << std::endl;
-			break;
+
+		catch (Error::CODES& e) {
+			switch (e)
+			{
+			case Error::CODES::INVALID_REG:
+				std::cout << "Invalid access to a register" << std::endl;
+				break;
+
+			case Error::CODES::OUTSIDE_OF_MEM_SPACE:
+				std::cout << "Access to invalid memory region" << std::endl;
+				break;
+
+			default:
+				std::cout << "Unhandled error detected" << std::endl;
+				break;
+			}
 		}
 	}
 }

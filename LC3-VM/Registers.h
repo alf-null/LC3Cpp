@@ -4,16 +4,7 @@
 #include "ISA.h"
 #include "Error.h"
 
-typedef unsigned short  suint16_t;
-
-class RegException: public std::exception
-{
-public:
-	virtual const char* what() const throw() {
-		return "Invalid register access";
-	}
-};
-
+typedef unsigned short uint16_t;
 
 class RegistersController
 {
@@ -38,6 +29,5 @@ public:
 	void updateFlags(Register location);
 
 private:
-	RegException regException;
 	uint16_t registers[10U];
 };

@@ -7,20 +7,9 @@
 
 typedef unsigned short	uint16_t;
 
-class MemException: public std::exception
-{
-public:
-	virtual const char* what() const throw() {
-		return "Outside of memory space";
-	}
-};
-
-
 class MemoryController
 {
 private:
-	MemException memExceptions;
-
 	const unsigned int MEM_WORD_SIZE = 16;
 	static const unsigned int MEM_MAX_SIZE = 65535; // Memory mapping from 0 - xFFFF
 	uint16_t* memory;
