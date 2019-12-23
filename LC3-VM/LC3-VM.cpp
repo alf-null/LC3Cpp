@@ -30,8 +30,9 @@ int main()
 			uint16_t op = instr >> 12;
 			switch (op)
 			{
-			case ISA::OP_BR:
+			case ISA::OP_BR: {
 				break;
+			}
 			case ISA::OP_ADD: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 526 
 				// DR
@@ -58,8 +59,26 @@ int main()
 				break;
 			case ISA::OP_JSR:
 				break;
-			case ISA::OP_AND:
+			case ISA::OP_AND: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 527 
+				// DR
+				auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
+				// SR1
+				auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
+				auto immFlag = (instr >> 5) & 0x1;
+				if (immFlag) {
+					auto imm5 = ISA::signExtend(instr & 0x1F, 5);
+					Registers.writeRegister(r0, Registers.readRegister(r1) & imm5);
+				}
+				else {
+					// SR2
+					auto r2 = static_cast<RegistersController::Register>(instr & 0x7);
+					Registers.writeRegister(r0, Registers.readRegister(r1) & Registers.readRegister(r2));
+				}
+
+				Registers.updateFlags(r0);
 				break;
+			}
 			case ISA::OP_LDR:
 				break;
 			case ISA::OP_STR:
