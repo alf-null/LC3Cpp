@@ -95,8 +95,16 @@ int main()
 			case ISA::OP_RTI: // Unnused (for now)
 				throw Error::CODES::INVALID_OP;
 				break;
-			case ISA::OP_NOT:
+			case ISA::OP_NOT: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 535
+				// DR
+				auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
+				// SR1
+				auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
+				Registers.writeRegister(r0, ~Registers.readRegister(r1));
+				Registers.updateFlags(r0);
 				break;
+			}
 			case ISA::OP_LDI: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 532 
 				// DR
