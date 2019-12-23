@@ -31,6 +31,15 @@ int main()
 			switch (op)
 			{
 			case ISA::OP_BR: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 528
+				auto pcOffset = ISA::signExtend((instr) & 0x1FF, 9);
+				auto flag = (instr >> 9) & 0x7;
+
+				if (flag & Registers.readRegister(RegistersController::Register::R_CONDF)) {
+					Registers.writeRegister(RegistersController::Register::R_PC, 
+						Registers.readRegister(RegistersController::Register::R_PC) + pcOffset);
+				}
+
 				break;
 			}
 			case ISA::OP_ADD: {
