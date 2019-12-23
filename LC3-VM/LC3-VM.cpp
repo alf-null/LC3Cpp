@@ -124,8 +124,12 @@ int main()
 			
 			case ISA::OP_STI:
 				break;
-			case ISA::OP_JMP:
+			case ISA::OP_JMP: {
+				// R1
+				auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
+				Registers.writeRegister(RegistersController::Register::R_PC, Registers.readRegister(r1));
 				break;
+			}
 			case ISA::OP_RES: // Unnused (for now)
 				throw Error::CODES::INVALID_OP;
 				break;
