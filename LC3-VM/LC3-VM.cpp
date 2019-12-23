@@ -2,6 +2,7 @@
 //
 
 #include <iostream>
+#include <cstdlib>
 
 #include "Memory.h"
 #include "Registers.h"
@@ -64,6 +65,7 @@ int main()
 			case ISA::OP_STR:
 				break;
 			case ISA::OP_RTI: // Unnused (for now)
+				throw Error::CODES::INVALID_OP;
 				break;
 			case ISA::OP_NOT:
 				break;
@@ -89,17 +91,19 @@ int main()
 			case ISA::OP_JMP:
 				break;
 			case ISA::OP_RES: // Unnused (for now)
+				throw Error::CODES::INVALID_OP;
 				break;
 			case ISA::OP_LEA:
 				break;
 			case ISA::OP_TRAP:
 				break;
 			default:
+				throw Error::CODES::INVALID_OP;
 				break;
 			}
 		}
 
-		catch (Error::CODES& e) {
+		catch (Error::CODES & e) {
 			switch (e)
 			{
 			case Error::CODES::INVALID_REG:
@@ -107,13 +111,18 @@ int main()
 				break;
 
 			case Error::CODES::OUTSIDE_OF_MEM_SPACE:
-				std::cout << "Access to invalid memory region" << std::endl;
+				std::cout << "Invalid memory access" << std::endl;
+				break;
+			
+			case Error::CODES::INVALID_OP:
+				std::cout << "Invalid instruction" << std::endl;
 				break;
 
 			default:
 				std::cout << "Unhandled error detected" << std::endl;
 				break;
 			}
+			std::abort();
 		}
 	}
 }
