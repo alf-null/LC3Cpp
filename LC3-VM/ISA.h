@@ -1,10 +1,13 @@
 #pragma once
 
+#include "Memory.h"
+#include "Registers.h"
+
 typedef unsigned short	uint16_t;
 
 namespace ISA
 {
-	enum : uint16_t {
+	enum OPCODES : uint16_t {
 		OP_BR = 0, /* branch */
 		OP_ADD,    /* add  */
 		OP_LD,     /* load */
@@ -24,11 +27,22 @@ namespace ISA
 		OP_OPS_NUMBER
 	};
 
-	enum	 {
-		FL_POS = 1 << 0, /* Positive flag */
-		FL_ZRO = 1 << 1, /* Zero flag */
-		FL_NEG = 1 << 2 /* Negative flag */
-	};
-
+	void fOP_BR(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_ADD(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_LD(MemoryController Memory, RegistersController Registers, uint16_t instr); 
+	void fOP_ST(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_JSR(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_AND(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_LDR(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_STR(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_RTI(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_NOT(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_LDI(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_STI(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_JMP(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_RES(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_LEA(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_TRAP(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	
 	uint16_t signExtend(uint16_t number, unsigned int bitCount);
 };

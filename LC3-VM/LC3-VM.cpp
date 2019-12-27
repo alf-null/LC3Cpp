@@ -30,112 +30,59 @@ int main()
 			uint16_t op = instr >> 12;
 			switch (op)
 			{
-			case ISA::OP_BR: {
+			case ISA::OPCODES::OP_BR: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 528
-				auto pcOffset = ISA::signExtend((instr) & 0x1FF, 9);
-				auto flag = (instr >> 9) & 0x7;
-
-				if (flag & Registers.readRegister(RegistersController::Register::R_CONDF)) {
-					Registers.writeRegister(RegistersController::Register::R_PC, 
-						Registers.readRegister(RegistersController::Register::R_PC) + pcOffset);
-				}
-
+				ISA::fOP_BR(Memory, Registers, instr);
 				break;
 			}
-			case ISA::OP_ADD: {
+			case ISA::OPCODES::OP_ADD: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 526 
-				// DR
-				auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
-				// SR1
-				auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
-				// Has inmediate mode?
-				auto immFlag = (instr >> 5) & 0x1;
-				if (immFlag) {
-					auto imm5 = ISA::signExtend(instr & 0x1F, 5);
-					Registers.writeRegister(r0, Registers.readRegister(r1) + imm5);
-				}
-				else {
-					auto r2 = static_cast<RegistersController::Register>(instr & 0x7);
-					Registers.writeRegister(r0, Registers.readRegister(r1) + Registers.readRegister(r2));
-				}
-
-				Registers.updateFlags(r0);
+				ISA::fOP_ADD(Memory, Registers, instr);
 				break;
 			}
-			case ISA::OP_LD:
+			case ISA::OPCODES::OP_LD:
 				break;
-			case ISA::OP_ST:
+			case ISA::OPCODES::OP_ST:
 				break;
-			case ISA::OP_JSR:
+			case ISA::OPCODES::OP_JSR: {
+				ISA::fOP_JSR(Memory, Registers, instr);
 				break;
-			case ISA::OP_AND: {
+			}
+			case ISA::OPCODES::OP_AND: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 527 
-				// DR
-				auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
-				// SR1
-				auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
-				auto immFlag = (instr >> 5) & 0x1;
-				if (immFlag) {
-					auto imm5 = ISA::signExtend(instr & 0x1F, 5);
-					Registers.writeRegister(r0, Registers.readRegister(r1) & imm5);
-				}
-				else {
-					// SR2
-					auto r2 = static_cast<RegistersController::Register>(instr & 0x7);
-					Registers.writeRegister(r0, Registers.readRegister(r1) & Registers.readRegister(r2));
-				}
-
-				Registers.updateFlags(r0);
+				ISA::fOP_AND(Memory, Registers, instr);
 				break;
 			}
-			case ISA::OP_LDR:
+			case ISA::OPCODES::OP_LDR:
 				break;
-			case ISA::OP_STR:
+			case ISA::OPCODES::OP_STR:
 				break;
-			case ISA::OP_RTI: // Unnused (for now)
+			case ISA::OPCODES::OP_RTI: // Unnused (for now)
 				throw Error::CODES::INVALID_OP;
 				break;
 			case ISA::OP_NOT: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 535
-				// DR
-				auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
-				// SR1
-				auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
-				Registers.writeRegister(r0, ~Registers.readRegister(r1));
-				Registers.updateFlags(r0);
+				ISA::fOP_NOT(Memory, Registers, instr);
 				break;
 			}
-			case ISA::OP_LDI: {
+			case ISA::OPCODES::OP_LDI: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 532 
-				// DR
-				auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
-				// PCoffset9
-				uint16_t pcOffset = ISA::signExtend(instr & 0x1FF, 9);
-
-				Registers.writeRegister(r0, 
-					Memory.readMemory( 
-						Memory.readMemory( Registers.readRegister(RegistersController::Register::R_PC) + pcOffset ) 
-					) 
-				);
-
-				Registers.updateFlags(r0);
+				ISA::fOP_LDI(Memory, Registers, instr);
 				break;
 			}
 			
-			case ISA::OP_STI:
+			case ISA::OPCODES::OP_STI:
 				break;
-			case ISA::OP_JMP: {
-				// R1
-				auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
-				Registers.writeRegister(RegistersController::Register::R_PC, Registers.readRegister(r1));
+			case ISA::OPCODES::OP_JMP: {
+				ISA::fOP_JMP(Memory, Registers, instr);
 				break;
 			}
-			case ISA::OP_RES: // Unnused (for now)
+			case ISA::OPCODES::OP_RES: // Unnused (for now)
 				throw Error::CODES::INVALID_OP;
 				break;
-			case ISA::OP_LEA:
+			case ISA::OPCODES::OP_LEA:
 				break;
-			case ISA::OP_TRAP:
+			case ISA::OPCODES::OP_TRAP:
 				break;
 			default:
 				throw Error::CODES::INVALID_OP;

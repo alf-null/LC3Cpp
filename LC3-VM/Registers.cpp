@@ -27,12 +27,12 @@ void RegistersController::updateFlags(Register location)
 	}
 
 	if (this->registers[reg] == 0) {
-		this->registers[static_cast<uint16_t>(Register::R_CONDF)] = ISA::FL_ZRO;
+		this->registers[static_cast<uint16_t>(Register::R_CONDF)] = FL_ZRO;
 	}
 	else if (this->registers[reg] >> 15) {
-		this->registers[static_cast<uint16_t>(Register::R_CONDF)] = ISA::FL_NEG;
+		this->registers[static_cast<uint16_t>(Register::R_CONDF)] = FL_NEG;
 	}
 	else {
-		this->registers[static_cast<uint16_t>(Register::R_CONDF)] = ISA::FL_POS;
+		this->registers[static_cast<uint16_t>(Register::R_CONDF)] = FL_POS;
 	}
 }
