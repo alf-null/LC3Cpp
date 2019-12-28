@@ -40,10 +40,17 @@ int main()
 				ISA::fOP_ADD(Memory, Registers, instr);
 				break;
 			}
-			case ISA::OPCODES::OP_LD:
+			case ISA::OPCODES::OP_LD: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 531
+				ISA::fOP_LD(Memory, Registers, instr);
 				break;
-			case ISA::OPCODES::OP_ST:
+			}
+				
+			case ISA::OPCODES::OP_ST: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 538
+				ISA::fOP_ST(Memory, Registers, instr);
 				break;
+			}
 			case ISA::OPCODES::OP_JSR: {
 				ISA::fOP_JSR(Memory, Registers, instr);
 				break;
@@ -53,8 +60,11 @@ int main()
 				ISA::fOP_AND(Memory, Registers, instr);
 				break;
 			}
-			case ISA::OPCODES::OP_LDR:
+			case ISA::OPCODES::OP_LDR: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 533
+				ISA::fOP_LDR(Memory, Registers, instr);
 				break;
+			}
 			case ISA::OPCODES::OP_STR:
 				break;
 			case ISA::OPCODES::OP_RTI: // Unnused (for now)
@@ -74,14 +84,18 @@ int main()
 			case ISA::OPCODES::OP_STI:
 				break;
 			case ISA::OPCODES::OP_JMP: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 529
 				ISA::fOP_JMP(Memory, Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_RES: // Unnused (for now)
 				throw Error::CODES::INVALID_OP;
 				break;
-			case ISA::OPCODES::OP_LEA:
+			case ISA::OPCODES::OP_LEA: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 534
+				ISA::fOP_LEA(Memory, Registers, instr);
 				break;
+			}
 			case ISA::OPCODES::OP_TRAP:
 				break;
 			default:

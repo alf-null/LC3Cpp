@@ -49,6 +49,9 @@ void ISA::fOP_LD(MemoryController Memory, RegistersController Registers, uint16_
 
 void ISA::fOP_ST(MemoryController Memory, RegistersController Registers, uint16_t instr)
 {
+    auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
+    uint16_t offset = ISA::signExtend(instr >> 0x1FF, 9);
+    Memory.writeMemory(Registers.readRegister(RegistersController::Register::R_PC) + offset, Registers.readRegister(r0));
 }
 
 void ISA::fOP_JSR(MemoryController Memory, RegistersController Registers, uint16_t instr)
@@ -88,6 +91,12 @@ void ISA::fOP_AND(MemoryController Memory, RegistersController Registers, uint16
 
 void ISA::fOP_LDR(MemoryController Memory, RegistersController Registers, uint16_t instr)
 {
+    auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
+    auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
+    uint16_t offset = ISA::signExtend((instr & 0x3Fd), 6);
+
+    Registers.writeRegister(r0, Memory.readMemory(Registers.readRegister(r1) + offset));
+    Registers.updateFlags(r0);
 }
 
 void ISA::fOP_STR(MemoryController Memory, RegistersController Registers, uint16_t instr)
@@ -141,6 +150,10 @@ void ISA::fOP_RES(MemoryController Memory, RegistersController Registers, uint16
 
 void ISA::fOP_LEA(MemoryController Memory, RegistersController Registers, uint16_t instr)
 {
+    auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
+    uint16_t offset = ISA::signExtend(instr & 0x1FF, 9);
+    Registers.writeRegister(r0, Registers.readRegister(RegistersController::Register::R_PC) + offset);
+    Registers.updateFlags(r0);
 }
 
 void ISA::fOP_TRAP(MemoryController Memory, RegistersController Registers, uint16_t instr)
