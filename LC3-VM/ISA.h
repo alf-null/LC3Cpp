@@ -8,23 +8,32 @@ typedef unsigned short	uint16_t;
 namespace ISA
 {
 	enum OPCODES : uint16_t {
-		OP_BR = 0, /* branch */
-		OP_ADD,    /* add  */
-		OP_LD,     /* load */
-		OP_ST,     /* store */
-		OP_JSR,    /* jump register */
-		OP_AND,    /* bitwise and */
-		OP_LDR,    /* load register */
-		OP_STR,    /* store register */
-		OP_RTI,    /* unused */
-		OP_NOT,    /* bitwise not */
-		OP_LDI,    /* load indirect */
-		OP_STI,    /* store indirect */
-		OP_JMP,    /* jump */
-		OP_RES,    /* reserved (unused) */
-		OP_LEA,    /* load effective address */
-		OP_TRAP,    /* execute trap */
+		OP_BR = 0, // Branch
+		OP_ADD,    // Add
+		OP_LD,     // Load
+		OP_ST,     // Store
+		OP_JSR,    // Jump register
+		OP_AND,    // Bitwise and
+		OP_LDR,    // Load register
+		OP_STR,    // Store register
+		OP_RTI,    // Return from interrupt
+		OP_NOT,    // Bitwise not
+		OP_LDI,    // Load indirect
+		OP_STI,    // Store indirect
+		OP_JMP,    // Jump
+		OP_RES,    // Reserved
+		OP_LEA,    // Load effective address
+		OP_TRAP,   // Trap
 		OP_OPS_NUMBER
+	};
+
+	enum TRAP : uint16_t {
+		TRAP_GETC = 0x20,  //  Read char from keyboard
+		TRAP_OUT,   //  Output a char
+		TRAP_PUTS,  //  Output a string
+		TRAP_IN,    //  Get char from keyboard > output on terminal
+		TRAP_PUTSP, //  Output a byte string
+		TRAP_HALT   //  Halt
 	};
 
 	void fOP_BR(MemoryController Memory, RegistersController Registers, uint16_t instr);

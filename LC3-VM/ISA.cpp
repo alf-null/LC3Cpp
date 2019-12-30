@@ -93,7 +93,7 @@ void ISA::fOP_LDR(MemoryController Memory, RegistersController Registers, uint16
 {
     auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
     auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
-    uint16_t offset = ISA::signExtend((instr & 0x3Fd), 6);
+    uint16_t offset = ISA::signExtend((instr & 0x3F), 6);
 
     Registers.writeRegister(r0, Memory.readMemory(Registers.readRegister(r1) + offset));
     Registers.updateFlags(r0);
@@ -101,6 +101,11 @@ void ISA::fOP_LDR(MemoryController Memory, RegistersController Registers, uint16
 
 void ISA::fOP_STR(MemoryController Memory, RegistersController Registers, uint16_t instr)
 {
+    auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
+    auto r1 = static_cast<RegistersController::Register>((instr >> 6) & 0x7);
+    uint16_t offset = ISA::signExtend((instr & 0x3F), 6);
+
+    Memory.writeMemory(Registers.readRegister(r1) + offset, Registers.readRegister(r0));
 }
 
 void ISA::fOP_RTI(MemoryController Memory, RegistersController Registers, uint16_t instr)
@@ -135,6 +140,13 @@ void ISA::fOP_LDI(MemoryController Memory, RegistersController Registers, uint16
 
 void ISA::fOP_STI(MemoryController Memory, RegistersController Registers, uint16_t instr)
 {
+    auto r0 = static_cast<RegistersController::Register>((instr >> 9) & 0x7);
+    uint16_t offset = ISA::signExtend(instr & 0x1FF, 9);
+    Memory.writeMemory(
+        Memory.readMemory(
+            Registers.readRegister(RegistersController::Register::R_PC) + offset
+        ), Registers.readRegister(r0)
+    );
 }
 
 void ISA::fOP_JMP(MemoryController Memory, RegistersController Registers, uint16_t instr)
