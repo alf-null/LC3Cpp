@@ -27,15 +27,7 @@ namespace ISA
 		OP_OPS_NUMBER
 	};
 
-	enum TRAP : uint16_t {
-		TRAP_GETC = 0x20,  //  Read char from keyboard
-		TRAP_OUT,   //  Output a char
-		TRAP_PUTS,  //  Output a string
-		TRAP_IN,    //  Get char from keyboard > output on terminal
-		TRAP_PUTSP, //  Output a byte string
-		TRAP_HALT   //  Halt
-	};
-
+	// Opcodes functions
 	void fOP_BR(MemoryController Memory, RegistersController Registers, uint16_t instr);
 	void fOP_ADD(MemoryController Memory, RegistersController Registers, uint16_t instr);
 	void fOP_LD(MemoryController Memory, RegistersController Registers, uint16_t instr); 
@@ -51,7 +43,24 @@ namespace ISA
 	void fOP_JMP(MemoryController Memory, RegistersController Registers, uint16_t instr);
 	void fOP_RES(MemoryController Memory, RegistersController Registers, uint16_t instr);
 	void fOP_LEA(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_TRAP(MemoryController Memory, RegistersController Registers, uint16_t instr);
+	void fOP_TRAP(MemoryController Memory, RegistersController Registers, uint16_t instr, bool* running);
 	
+	// Trap functions
+	void fGETC(MemoryController Memory, RegistersController Registers);
+	void fOUT(MemoryController Memory, RegistersController Registers);
+	void fPUTS(MemoryController Memory, RegistersController Registers);
+	void fIN(MemoryController Memory, RegistersController Registers);
+	void fPUTSP(MemoryController Memory, RegistersController Registers);
+	void fHALT(MemoryController Memory, RegistersController Registers, bool* running);
+
+	enum TRAP : uint16_t {
+		GETC = 0x20,	//  GETC
+		OUT,			//  OUT
+		PUTS,			//  PUTS
+		IN,			//  IN
+		PUTSP,			//  PUTSP
+		HALT			//  HALT
+	};
+
 	uint16_t signExtend(uint16_t number, unsigned int bitCount);
 };

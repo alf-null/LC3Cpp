@@ -104,8 +104,11 @@ int main()
 				ISA::fOP_LEA(Memory, Registers, instr);
 				break;
 			}
-			case ISA::OPCODES::OP_TRAP:
+			case ISA::OPCODES::OP_TRAP: {
+				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 541
+				ISA::fOP_TRAP(Memory, Registers, instr, &running);
 				break;
+			}
 			default:
 				throw Error::CODES::INVALID_OP;
 				break;

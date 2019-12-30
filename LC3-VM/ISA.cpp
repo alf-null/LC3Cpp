@@ -168,6 +168,90 @@ void ISA::fOP_LEA(MemoryController Memory, RegistersController Registers, uint16
     Registers.updateFlags(r0);
 }
 
-void ISA::fOP_TRAP(MemoryController Memory, RegistersController Registers, uint16_t instr)
+void ISA::fGETC(MemoryController Memory, RegistersController Registers)
 {
+	Registers.writeRegister(RegistersController::Register::R_0, static_cast<uint16_t>(getchar()));
 }
+
+void ISA::fOUT(MemoryController Memory, RegistersController Registers)
+{
+	putc(static_cast<char>(Registers.readRegister(RegistersController::Register::R_0)), stdout);
+	fflush(stdout);
+}
+
+void ISA::fPUTS(MemoryController Memory, RegistersController Registers)
+{
+	uint16_t* c = Memory.pMemory() + Registers.readRegister(RegistersController::Register::R_0);
+	while (*c) {
+		putc(static_cast<char>(*c), stdout);
+		c++;
+	}
+	fflush(stdout);
+}
+
+void ISA::fIN(MemoryController Memory, RegistersController Registers)
+{
+	char c = getchar();
+	putc(c, stdout);
+	
+	Registers.writeRegister(RegistersController::Register::R_0, static_cast<uint16_t>(c));
+}
+
+void ISA::fPUTSP(MemoryController Memory, RegistersController Registers)
+{
+	uint16_t* character = Memory.pMemory() + Registers.readRegister(RegistersController::Register::R_0);
+	while(*character) {
+		putc((*character) & 0xFF, stdout);
+		char c2 = (*character) >> 8;
+		if (c2) {
+			putc(c2, stdout);
+		}
+	}
+
+	fflush(stdout);
+}
+
+void ISA::fHALT(MemoryController Memory, RegistersController Registers, bool* running)
+{
+	puts("HALTING");
+	fflush(stdout);
+	*running = false;
+}
+
+
+void ISA::fOP_TRAP(MemoryController Memory, RegistersController Registers, uint16_t instr, bool* running)
+{
+	// The trap vector table has 256 memory locations from 0x0000 to 0x00FF
+	switch (instr & 0xFF) {
+	case ISA::TRAP::GETC: {
+		ISA::fGETC(Memory, Registers);
+		break;
+	}
+
+	case ISA::TRAP::OUT: {
+		ISA::fOUT(Memory, Registers);
+		break;
+	}
+
+	case ISA::TRAP::PUTS: {
+		ISA::fPUTS(Memory, Registers);
+		break;
+	}
+
+	case ISA::TRAP::IN: {
+		ISA::fIN(Memory, Registers);
+		break;
+	}
+
+	case ISA::TRAP::PUTSP: {
+		ISA::fPUTSP(Memory, Registers);
+		break;
+	}
+
+	case ISA::TRAP::HALT: {
+		ISA::fHALT(Memory, Registers, running);
+		break;
+	}
+	}
+}
+

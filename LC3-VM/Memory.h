@@ -22,6 +22,7 @@ public:
 	{
 		delete[] memory;
 	}
+	uint16_t* pMemory() const;
 	const uint16_t readMemory(const uint16_t location) const;
 	void writeMemory(const uint16_t location, uint16_t value);
 };
