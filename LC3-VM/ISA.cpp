@@ -8,6 +8,11 @@ uint16_t ISA::signExtend(uint16_t number, unsigned int bitCount)
     return number;
 }
 
+uint16_t ISA::swxap16(uint16_t number)
+{
+	return (number << 8) | (number >> 8);
+}
+
 void ISA::fOP_BR(MemoryController Memory, RegistersController Registers, uint16_t instr)
 {
     auto pcOffset = ISA::signExtend((instr) & 0x1FF, 9);

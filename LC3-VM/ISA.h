@@ -63,4 +63,5 @@ namespace ISA
 	};
 
 	uint16_t signExtend(uint16_t number, unsigned int bitCount);
+	uint16_t swxap16(uint16_t number);
 };

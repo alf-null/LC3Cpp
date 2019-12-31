@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cstdio>
+#include <cstdint>
 
 #include "Memory.h"
 #include "Registers.h"
@@ -10,7 +12,10 @@
 
 constexpr uint16_t PC_START = 0x3000;
 
-int main()
+void readFIle(FILE* pfile, MemoryController Memory);
+bool readImage(const char* path, MemoryController Memory);
+
+int main(int argc, char* argv[])
 {
 	MemoryController Memory;
 	RegistersController Registers;
@@ -137,4 +142,31 @@ int main()
 			std::abort();
 		}
 	}
+}
+
+void readFIle(FILE* pfile, MemoryController Memory)
+{
+	uint16_t origin;
+	fread(&origin, sizeof(origin), 1, pfile);
+	origin = ISA::swxap16(origin);
+
+	uint16_t maxRead = UINT16_MAX - origin;
+	uint16_t* pStart = Memory.pMemory() + origin;
+	size_t read = fread(pStart, sizeof(uint16_t), maxRead, pfile);
+
+	while (read-- > 0) {
+		*pStart = ISA::swxap16(*pStart);
+		++pStart;
+	}
+}
+
+bool readImage(const char* path, MemoryController Memory)
+{
+	FILE* pfile = fopen(path, "rb");
+	if (!pfile) {
+		return false;
+	}
+	readFIle(pfile, Memory);
+	fclose(pfile);
+	return true;
 }
