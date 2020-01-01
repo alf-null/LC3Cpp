@@ -25,8 +25,6 @@ int main(int argc, char* argv[])
 		std::abort();
 	}
 
-	std::cout << argv[1] << std::endl;
-
 	MemoryController Memory;
 	RegistersController Registers;
 
