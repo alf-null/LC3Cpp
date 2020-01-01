@@ -5,6 +5,11 @@ uint16_t* MemoryController::pMemory() const
 	return this->memory;
 }
 
+void MemoryController::cleanMemory()
+{
+	delete[] this->memory;
+}
+
 const uint16_t MemoryController::readMemory(const uint16_t location) const
 {
 	if (location > MEM_MAX_SIZE -1) {

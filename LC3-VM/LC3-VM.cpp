@@ -18,8 +18,25 @@ bool readImage(const char* path, MemoryController Memory);
 
 int main(int argc, char* argv[])
 {
+
+	if (argc < 2) {
+		std::cout << "Missing the program file!" << std::endl;
+		std::cout << "LC3-VM fileName (to execute it)" << std::endl;
+		std::abort();
+	}
+
+	std::cout << argv[1] << std::endl;
+
 	MemoryController Memory;
 	RegistersController Registers;
+
+	// Load program to memory
+	for (auto j = 1; j < argc; j++) {
+		if (!readImage(argv[j], Memory)) {
+			std::cout << "Error loading program!" << std::endl;
+			std::abort();
+		}
+	}
 
 	// R_PC Initialization
 	Registers.writeRegister(RegistersController::Register::R_PC, PC_START);
@@ -140,9 +157,11 @@ int main(int argc, char* argv[])
 				std::cout << "Unhandled error detected" << std::endl;
 				break;
 			}
+			Memory.cleanMemory();
 			std::abort();
 		}
 	}
+	Memory.cleanMemory();
 }
 
 void readFIle(FILE* pfile, MemoryController Memory)
