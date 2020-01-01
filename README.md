@@ -1,4 +1,4 @@
-#LC3Cpp
+LC3Cpp
 
 As fas as this goes, I pretend this to be my own implementation of the LC3 architecture Virtual Machine.
 This project is mainly with educational purposes.
