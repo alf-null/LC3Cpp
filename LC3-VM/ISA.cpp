@@ -233,7 +233,7 @@ void ISA::fOP_TRAP(MemoryController Memory, RegistersController Registers, uint1
 		break;
 	}
 
-	case ISA::TRAP::OUT: {
+	case ISA::TRAP::TOUT: {
 		ISA::fOUT(Memory, Registers);
 		break;
 	}
@@ -243,7 +243,7 @@ void ISA::fOP_TRAP(MemoryController Memory, RegistersController Registers, uint1
 		break;
 	}
 
-	case ISA::TRAP::IN: {
+	case ISA::TRAP::TIN: {
 		ISA::fIN(Memory, Registers);
 		break;
 	}

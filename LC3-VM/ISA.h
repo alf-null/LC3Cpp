@@ -55,9 +55,9 @@ namespace ISA
 
 	enum TRAP : uint16_t {
 		GETC = 0x20,	//  GETC
-		OUT,			//  OUT
+		TOUT,			//  OUT
 		PUTS,			//  PUTS
-		IN,			//  IN
+		TIN,			//  IN
 		PUTSP,			//  PUTSP
 		HALT			//  HALT
 	};

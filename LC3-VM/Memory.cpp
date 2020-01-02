@@ -1,12 +1,20 @@
 #include "Memory.h"
 
-bool checkKey() {
-	return false;
-}
-
 uint16_t* MemoryController::pMemory() const
 {
 	return this->memory;
+}
+
+bool MemoryController::checkKey() const
+{
+	fd_set readfds;
+	FD_ZERO(&readfds);
+	FD_SET(STDIN_FILENO, &readfds);
+
+	struct timeval timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 0;
+	return select(1, &readfds, NULL, NULL, &timeout) != 0;
 }
 
 void MemoryController::cleanMemory()
@@ -30,7 +38,6 @@ const uint16_t MemoryController::readMemory(const uint16_t location) const
 			this->memory[static_cast<uint16_t>(RegistersController::IORegister::KBSR)] = 0;
 		}
 	}
-	
 
 	return this->memory[location];
 }
