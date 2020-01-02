@@ -1,5 +1,9 @@
 #include "Memory.h"
 
+bool checkKey() {
+	return false;
+}
+
 uint16_t* MemoryController::pMemory() const
 {
 	return this->memory;
@@ -17,12 +21,16 @@ const uint16_t MemoryController::readMemory(const uint16_t location) const
 	}
 
 	if (static_cast<RegistersController::IORegister>(location) == RegistersController::IORegister::KBSR) {
-		this->memory[static_cast<uint16_t>(RegistersController::IORegister::KBSR)] = (1 << 15);
-		this->memory[static_cast<uint16_t>(RegistersController::IORegister::KBDR)] = getchar();
+		
+		if (checkKey()) {
+			this->memory[static_cast<uint16_t>(RegistersController::IORegister::KBSR)] = (1 << 15);
+			this->memory[static_cast<uint16_t>(RegistersController::IORegister::KBDR)] = getchar();
+		}
+		else {
+			this->memory[static_cast<uint16_t>(RegistersController::IORegister::KBSR)] = 0;
+		}
 	}
-	else {
-		this->memory[static_cast<uint16_t>(RegistersController::IORegister::KBSR)] = 0;
-	}
+	
 
 	return this->memory[location];
 }
