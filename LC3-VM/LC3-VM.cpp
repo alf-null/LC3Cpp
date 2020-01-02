@@ -8,7 +8,6 @@
 #include <cstdint>
 
 #include "Memory.h"
-#include "Registers.h"
 #include "ISA.h"
 
 constexpr uint16_t PC_START = 0x3000;
@@ -18,6 +17,8 @@ bool readImage(const char* path, MemoryController Memory);
 
 int main(int argc, char* argv[])
 {
+
+	std::cout << argv[1] << std::endl;
 
 	if (argc < 2) {
 		std::cout << "Missing the program file!" << std::endl;

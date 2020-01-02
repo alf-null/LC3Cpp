@@ -3,7 +3,9 @@
 #include <memory>
 #include <cmath>
 #include <exception>
+
 #include "Error.h"
+#include "Registers.h"
 
 typedef unsigned short	uint16_t;
 
