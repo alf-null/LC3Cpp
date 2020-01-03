@@ -10,11 +10,15 @@
 #include "Memory.h"
 #include "ISA.h"
 
+#include <Windows.h>
+
 constexpr uint16_t PC_START = 0x3000;
 
 void readFIle(FILE* pfile, MemoryController Memory);
 bool readImage(const char* path, MemoryController Memory);
+DWORD WINAPI StopInputBuffering( LPVOID lpParam);
 
+/*
 int main(int argc, char* argv[])
 {
 
@@ -162,6 +166,7 @@ int main(int argc, char* argv[])
 	}
 	Memory.cleanMemory();
 }
+*/
 
 void readFIle(FILE* pfile, MemoryController Memory)
 {
@@ -188,4 +193,51 @@ bool readImage(const char* path, MemoryController Memory)
 	readFIle(pfile, Memory);
 	fclose(pfile);
 	return true;
+}
+
+DWORD WINAPI StopInputBuffering( LPVOID lpParam)
+{
+	HANDLE hStdin;
+	DWORD fdwSaveOldMode;
+
+	DWORD cNumRead, fdwMode, i;
+	INPUT_RECORD irInBuf[128];
+
+	hStdin = GetStdHandle(STD_INPUT_HANDLE);
+	if (hStdin == INVALID_HANDLE_VALUE) {
+		return 1;
+	}
+
+	// Save the current input mode, to be restored on exit. 
+
+	if (!GetConsoleMode(hStdin, &fdwSaveOldMode)) {
+		return 1;
+	}
+
+	// Enable the window and mouse input events. 
+
+	fdwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT;
+	if (!SetConsoleMode(hStdin, fdwMode)) {
+		return 1;
+	}
+
+	// Loop to read and handle the next 100 input events. 
+
+	while (true)
+	{
+		// Wait for the events. 
+
+		if (!ReadConsoleInput(
+			hStdin,      // input buffer handle 
+			irInBuf,     // buffer to read into 
+			128,         // size of read buffer 
+			&cNumRead)) // number of records read 
+			return 0;
+	}
+}
+
+int main(VOID) {
+	HANDLE hThreadDissableBuffer;
+
+	
 }
