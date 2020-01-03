@@ -10,10 +10,11 @@
 #include "Error.h"
 #include "Registers.h"
 
+#pragma comment(lib, "Ws2_32.lib")
+
 typedef unsigned short	uint16_t;
 
 constexpr unsigned int STDIN_FILENO = 0;
-
 
 class MemoryController
 {
