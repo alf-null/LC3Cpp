@@ -21,7 +21,11 @@ class MemoryController
 private:
 	const unsigned int MEM_WORD_SIZE = 16;
 	static const unsigned int MEM_MAX_SIZE = 65535; // Memory mapping from 0 - xFFFF
-	uint16_t* memory = new uint16_t[MEM_MAX_SIZE];
+	uint16_t* memory = (uint16_t*)HeapAlloc(
+		GetProcessHeap(),
+		HEAP_ZERO_MEMORY,
+		sizeof(uint16_t) * MEM_MAX_SIZE
+	);
 
 public:
 	uint16_t* pMemory() const;

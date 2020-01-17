@@ -6,19 +6,25 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstdint>
-
+  
 #include "Memory.h"
 #include "ISA.h"
 
 #include <Windows.h>
+#include <tchar.h>
+#include <intsafe.h>
 
 constexpr uint16_t PC_START = 0x3000;
 
+typedef struct consoleData {
+	HANDLE hStdin;
+	DWORD fdwSaveOldMode;
+}CDATA, *PCDATA;
+
 void readFIle(FILE* pfile, MemoryController Memory);
 bool readImage(const char* path, MemoryController Memory);
-DWORD WINAPI StopInputBuffering( LPVOID lpParam);
 
-/*
+
 int main(int argc, char* argv[])
 {
 
@@ -58,43 +64,43 @@ int main(int argc, char* argv[])
 			{
 			case ISA::OPCODES::OP_BR: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 528
-				ISA::fOP_BR(Memory, Registers, instr);
+				ISA::fOP_BR(Memory, &Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_ADD: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 526 
-				ISA::fOP_ADD(Memory, Registers, instr);
+				ISA::fOP_ADD(Memory, &Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_LD: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 531
-				ISA::fOP_LD(Memory, Registers, instr);
+				ISA::fOP_LD(Memory, &Registers, instr);
 				break;
 			}
 				
 			case ISA::OPCODES::OP_ST: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 538
-				ISA::fOP_ST(Memory, Registers, instr);
+				ISA::fOP_ST(Memory, &Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_JSR: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 530
-				ISA::fOP_JSR(Memory, Registers, instr);
+				ISA::fOP_JSR(Memory, &Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_AND: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 527 
-				ISA::fOP_AND(Memory, Registers, instr);
+				ISA::fOP_AND(Memory, &Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_LDR: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 533
-				ISA::fOP_LDR(Memory, Registers, instr);
+				ISA::fOP_LDR(Memory, &Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_STR: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 540
-				ISA::fOP_STR(Memory, Registers, instr);
+				ISA::fOP_STR(Memory, &Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_RTI: // Unnused (for now)
@@ -102,24 +108,24 @@ int main(int argc, char* argv[])
 				break;
 			case ISA::OP_NOT: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 535
-				ISA::fOP_NOT(Memory, Registers, instr);
+				ISA::fOP_NOT(Memory, &Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_LDI: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 532 
-				ISA::fOP_LDI(Memory, Registers, instr);
+				ISA::fOP_LDI(Memory, &Registers, instr);
 				break;
 			}
 			
 			case ISA::OPCODES::OP_STI: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 539
-				ISA::fOP_STI(Memory, Registers, instr);
+				ISA::fOP_STI(Memory, &Registers, instr);
 				break;
 			}
 				
 			case ISA::OPCODES::OP_JMP: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 529
-				ISA::fOP_JMP(Memory, Registers, instr);
+				ISA::fOP_JMP(Memory, &Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_RES: // Unnused (for now)
@@ -127,12 +133,12 @@ int main(int argc, char* argv[])
 				break;
 			case ISA::OPCODES::OP_LEA: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 534
-				ISA::fOP_LEA(Memory, Registers, instr);
+				ISA::fOP_LEA(Memory, &Registers, instr);
 				break;
 			}
 			case ISA::OPCODES::OP_TRAP: {
 				// https://justinmeiners.github.io/lc3-vm/supplies/lc3-isa.pdf 541
-				ISA::fOP_TRAP(Memory, Registers, instr, &running);
+				ISA::fOP_TRAP(Memory, &Registers, instr, &running);
 				break;
 			}
 			default:
@@ -166,7 +172,6 @@ int main(int argc, char* argv[])
 	}
 	Memory.cleanMemory();
 }
-*/
 
 void readFIle(FILE* pfile, MemoryController Memory)
 {
@@ -193,51 +198,4 @@ bool readImage(const char* path, MemoryController Memory)
 	readFIle(pfile, Memory);
 	fclose(pfile);
 	return true;
-}
-
-DWORD WINAPI StopInputBuffering( LPVOID lpParam)
-{
-	HANDLE hStdin;
-	DWORD fdwSaveOldMode;
-
-	DWORD cNumRead, fdwMode, i;
-	INPUT_RECORD irInBuf[128];
-
-	hStdin = GetStdHandle(STD_INPUT_HANDLE);
-	if (hStdin == INVALID_HANDLE_VALUE) {
-		return 1;
-	}
-
-	// Save the current input mode, to be restored on exit. 
-
-	if (!GetConsoleMode(hStdin, &fdwSaveOldMode)) {
-		return 1;
-	}
-
-	// Enable the window and mouse input events. 
-
-	fdwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT;
-	if (!SetConsoleMode(hStdin, fdwMode)) {
-		return 1;
-	}
-
-	// Loop to read and handle the next 100 input events. 
-
-	while (true)
-	{
-		// Wait for the events. 
-
-		if (!ReadConsoleInput(
-			hStdin,      // input buffer handle 
-			irInBuf,     // buffer to read into 
-			128,         // size of read buffer 
-			&cNumRead)) // number of records read 
-			return 0;
-	}
-}
-
-int main(VOID) {
-	HANDLE hThreadDissableBuffer;
-
-	
 }

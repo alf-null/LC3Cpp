@@ -28,30 +28,30 @@ namespace ISA
 	};
 
 	// Opcodes functions
-	void fOP_BR(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_ADD(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_LD(MemoryController Memory, RegistersController Registers, uint16_t instr); 
-	void fOP_ST(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_JSR(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_AND(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_LDR(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_STR(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_RTI(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_NOT(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_LDI(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_STI(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_JMP(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_RES(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_LEA(MemoryController Memory, RegistersController Registers, uint16_t instr);
-	void fOP_TRAP(MemoryController Memory, RegistersController Registers, uint16_t instr, bool* running);
+	void fOP_BR(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_ADD(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_LD(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_ST(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_JSR(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_AND(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_LDR(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_STR(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_RTI(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_NOT(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_LDI(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_STI(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_JMP(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_RES(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_LEA(MemoryController Memory, RegistersController* Registers, uint16_t instr);
+	void fOP_TRAP(MemoryController Memory, RegistersController* Registers, uint16_t instr, bool* running);
 	
 	// Trap functions
-	void fGETC(MemoryController Memory, RegistersController Registers);
-	void fOUT(MemoryController Memory, RegistersController Registers);
-	void fPUTS(MemoryController Memory, RegistersController Registers);
-	void fIN(MemoryController Memory, RegistersController Registers);
-	void fPUTSP(MemoryController Memory, RegistersController Registers);
-	void fHALT(MemoryController Memory, RegistersController Registers, bool* running);
+	void fGETC(MemoryController Memory, RegistersController* Registers);
+	void fOUT(MemoryController Memory, RegistersController* Registers);
+	void fPUTS(MemoryController Memory, RegistersController* Registers);
+	void fIN(MemoryController Memory, RegistersController* Registers);
+	void fPUTSP(MemoryController Memory, RegistersController* Registers);
+	void fHALT(MemoryController Memory, RegistersController* Registers, bool* running);
 
 	enum TRAP : uint16_t {
 		GETC = 0x20,	//  GETC

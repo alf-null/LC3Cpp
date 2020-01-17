@@ -49,5 +49,5 @@ public:
 	void updateFlags(Register location);
 
 private:
-	uint16_t registers[10U];
+	uint16_t registers[10U] = {};
 };

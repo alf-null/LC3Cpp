@@ -19,7 +19,11 @@ bool MemoryController::checkKey() const
 
 void MemoryController::cleanMemory()
 {
-	delete[] this->memory;
+	HeapFree(
+		GetProcessHeap(),
+		HEAP_NO_SERIALIZE,
+		(LPVOID)this->memory
+	);
 }
 
 const uint16_t MemoryController::readMemory(const uint16_t location) const
